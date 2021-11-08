@@ -1,0 +1,136 @@
+{
+	"info": {
+		"_postman_id": "be971a3f-64f4-46b2-a748-6d1ef2390bed",
+		"name": "reqres",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//parse json response data",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"//verify status code is 200",
+							"pm.test(\"Get list user response success\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"//verify e-mail : lindsay.ferguson@reqres.in",
+							"pm.test(\"Response contains : lindsay.ferguson@reqres.in\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"lindsay.ferguson@reqres.in\");",
+							"});",
+							"",
+							"//search e-mail : lindsay.ferguson@reqres.in",
+							"pm.test(\"Search e-mail : lindsay.ferguson@reqres.in\", function (){",
+							"    for(i=0;i<jsonData.data.length;i++){",
+							"        if(jsonData.data[i].email == 'lindsay.ferguson@reqres.in'){",
+							"            pm.globals.set(\"returned_email\", jsonData.data[i].email);",
+							"        }",
+							"    }",
+							"})",
+							"",
+							"//compare returned (response) and expected",
+							"pm.test(\"Compare returned and expected\", function (){",
+							"    var expected_email = \"lindsay.ferguson@reqres.in\";",
+							"    var returned_email = pm.globals.get(\"returned_email\");",
+							"    pm.expect(returned_email).to.eql(expected_email);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://reqres.in/api/users?page=2",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//parse json response data",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"//verify status code is 200",
+							"pm.test(\"Create user response success 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"//verify status code is 201",
+							"pm.test(\"Create user response success 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"//print value id",
+							"var id = jsonData.id;",
+							"pm.test(id, function () {",
+							"    console.log(id);",
+							"});",
+							"",
+							"//print value jobs",
+							"var job = jsonData.job;",
+							"pm.test(job, function () {",
+							"    console.log(job);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\" : \"testing\",\n    \"job\" : \"manager\",\n    \"id\" : \"12345\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://reqres.in/api/users",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
